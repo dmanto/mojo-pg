@@ -32,4 +32,4 @@ jobs:
       - name: Run Tests
         run: prove -l
         env: 
-          TEST_ONLINE: postgresql://postgres:postgres@localhost/postgres
+          TEST_ONLINE: postgresql://postgres:root@localhost/postgres
