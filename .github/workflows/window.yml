@@ -1,0 +1,30 @@
+name: windows
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
+  pull_request:
+jobs:
+  perl:
+    runs-on: windows-latest
+    steps:
+      - name: Set git to use LF
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+      - uses: actions/checkout@v2
+      - name: Set up Perl
+        run: |
+          cinst -y strawberryperl
+          cinst -y postgresql13 /Password:postgres
+          refreshenv
+      - name: perl -V
+        run: perl -V
+      - name: Install Dependencies
+        run: curl -L https://cpanmin.us | perl - --installdeps .
+      - name: Run Tests
+        run: prove -l
+        env: 
+          TEST_ONLINE: postgresql://postgres:postgres@postgres:5432/postgres
