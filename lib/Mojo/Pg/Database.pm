@@ -160,7 +160,7 @@ sub _watch {
 
   my $dbh = $self->dbh;
   unless ($self->{handle}) {
-    open $self->{handle}, '<&='. fileno ($dbh->{pg_socket}) or die "Can't dup: $!";
+    open $self->{handle}, '<&'. fileno ($dbh->{pg_socket}) or die "Can't dup: $!";
   }
   Mojo::IOLoop->singleton->reactor->io(
     $self->{handle} => sub {
