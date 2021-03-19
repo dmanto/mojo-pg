@@ -160,7 +160,7 @@ sub _watch {
 
   my $dbh = $self->dbh;
   unless ($self->{handle}) {
-    my $fd = fileno $dbh->{pg_socket};
+    my $fd = $dbh->{pg_socket};
     print STDERR "file number is $fd";
     open $self->{handle}, "+<&=$fd" or die "Can't dup: $!";
   }
