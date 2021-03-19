@@ -9,8 +9,8 @@ use Mojo::Pg::Results;
 use Mojo::Pg::Transaction;
 use Mojo::Promise;
 use Mojo::Util qw(monkey_patch);
-use IO::FDPass;
-
+# use IO::FDPass;
+use POSIX;
 
 has 'dbh';
 has pg => undef, weak => 1;
@@ -162,10 +162,10 @@ sub _watch {
 
   my $dbh = $self->dbh;
   unless ($self->{handle}) {
-    my $fd = IO::FDPass::recv $dbh->{pg_socket};
-    $fd >= 0 or die "unable to receive file handle: $!";
-    print STDERR "file number is $fd";
-    open $self->{handle}, "+<&=$fd" or die "Can't dup: $!";
+    my $fd = $dbh->{pg_socket};
+#    $fd >= 0 or die "unable to receive file handle: $!";
+#    print STDERR "file number is $fd";
+    open $self->{handle}, '<&', $fd or die "Can't dup: $!";
   }
   Mojo::IOLoop->singleton->reactor->io(
     $self->{handle} => sub {
