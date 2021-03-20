@@ -162,6 +162,7 @@ sub _watch {
   unless ($self->{handle}) {
     my $fd = $dbh->{pg_socket};
     $fd >= 0 or die "unable to receive file handle: $!";
+    $fd =~ s/(\d).*/$1/;
     print STDERR "file number is $fd";
     open $self->{handle}, '<&=', $fd or die "Can't dup: $!";
   }
